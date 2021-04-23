@@ -121,9 +121,13 @@ def mandar_file(addr):
 # Se recibe la información de conexión del cliente
 def esperar_conexiones():
     esperadas = 0
+    data, addr = ser_socket.recvfrom(1024)
+    # se manda primero que nada el número de conexiones al primer puerto del servidor
+    # despues de hacer esto el while capturará el adrr de los sockets que se comuniquen con el
+    # y por cada uno pondrá al thread_z a trabajar enciando un file a la tupla (ip, port) recibida.
+    ser_socket.sendto(str(conexiones).encode('utf-8'), addr)
     while esperadas < conexiones:
         try:
-            data, addr = ser_socket.recvfrom(1024)
             #se manda el nombre
             thread_x = threading.Thread(target=send_file_name(addr))
             #se manda el hash
@@ -131,6 +135,7 @@ def esperar_conexiones():
             #se manda el file
             thread_z = threading.Thread(target=mandar_file(addr))
             thread_z.start()
+            data, addr = ser_socket.recvfrom(1024)
         except OSError as err:
             print(err)
 

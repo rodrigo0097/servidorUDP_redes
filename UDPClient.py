@@ -10,6 +10,8 @@ cli_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 msg = "Hello"
 cli_socket.sendto(msg.encode("utf-8"), ('127.0.0.1', 12345))
 data,addr = cli_socket.recvfrom(1024)
+numero_conexiones = data.decode('utf-8')
+data,addr = cli_socket.recvfrom(1024)
 # Se captura el nombre del file desde el servidor
 file_name = data
 titulo = file_name.decode("utf-8")
@@ -38,8 +40,10 @@ def hasheame_esta():
     return h.hexdigest()
 
 
+print("Nicole y brayan: el número de sockets que deben crear en esta iteración es " + numero_conexiones)
 print(file_name)
 print("se recibe el archivo con un hash esperado de " + hexadecimal_hash)
+print(numero_conexiones)
 
 data,addr = cli_socket.recvfrom(1024)
 corte = titulo + "kill"
