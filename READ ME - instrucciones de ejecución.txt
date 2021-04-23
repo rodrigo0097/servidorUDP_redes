@@ -1,0 +1,8 @@
+Para ejecutar correctamente este programa en la carpeta files debe de crear
+los archivos de 100 y 250 mb con los titulos prueba100mb y prueba250mb respectivamente 
+con extensión .txt, tambien un archivo prueba del tamaño deseado con el nombre
+prueba.txt. Tambien puede añadir el archivo que desee, con cualquier nombre y extensión.
+
+para empezar ejecute el archivo UDPServer.py seleccione el archivo deseado. Posteriormente
+ejecute el archivo cliente y espere a que este notifique la recepción del archivo.
+Finalmente, revise que su archivo llego adecuadamente a la carpeta recibidos
