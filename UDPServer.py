@@ -135,7 +135,9 @@ def esperar_conexiones():
             #se manda el file
             thread_z = threading.Thread(target=mandar_file(addr))
             thread_z.start()
-            data, addr = ser_socket.recvfrom(1024)
+            if (conexiones - esperadas) != 1:
+                data, addr = ser_socket.recvfrom(1024)
+
         except OSError as err:
             print(err)
 
