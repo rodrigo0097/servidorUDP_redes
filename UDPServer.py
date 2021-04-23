@@ -1,5 +1,6 @@
 import socket
 import hashlib
+import threading
 FILE100 = "prueba100mb.txt"
 FILE250 = "prueba250mb.txt"
 FILEPRUEBA = "prueba.txt"
@@ -22,6 +23,12 @@ def menu_inicial_tamanio():
         print("por favor ingrese un número entre 1 y 4")
         print(file_size)
         menu_inicial_tamanio()
+    if file_size == "1":
+        file_name = FILE100
+    if file_size == "2":
+        file_name = FILE250
+    if file_size == "3":
+        file_name = FILEPRUEBA
     if file_size == "4":
         print("inserte el nombre del archivo localizado en la carpeta files"
               "\n" "El nombre del archivo debe de ir completo incluyendo su extensión "
@@ -70,44 +77,63 @@ def hasheame_esta():
     # return the hex representation of digest
     return h.hexdigest()
 
-# Se recibe la información de conexión del cliente
 
-try:
-    data, addr = ser_socket.recvfrom(1024)
-except socket.error as e:
-    print(str(e))
 # se envía el nombre del archivo al cliente
 
-if numero == 1:
-    ser_socket.sendto(FILE100.encode('utf-8'), addr)
-    nombre = FILE100
-if numero == 2:
-    ser_socket.sendto(FILE250.encode('utf-8'), addr)
-    nombre = FILE250
-if numero == 3:
-    ser_socket.sendto(FILEPRUEBA.encode('utf-8'), addr)
-    nombre = FILEPRUEBA
-if numero == 4:
-    ruta = nombre
-    print(ruta)
-    ser_socket.sendto(ruta.encode('utf-8'), addr)
+
+def send_file_name(addr):
+    if numero == 1:
+        ser_socket.sendto(FILE100.encode('utf-8'), addr)
+    if numero == 2:
+        ser_socket.sendto(FILE250.encode('utf-8'), addr)
+    if numero == 3:
+        ser_socket.sendto(FILEPRUEBA.encode('utf-8'), addr)
+    if numero == 4:
+        ruta = nombre
+        print(ruta)
+        ser_socket.sendto(ruta.encode('utf-8'), addr)
+
+
+
 # Se calcula el hash
 hexadecimal = hasheame_esta()
-# se envía el hash
-ser_socket.sendto(str.encode(hexadecimal), addr)
-f = open("files/" + nombre, 'rb')
-l = f.read(1024)
-datagramas = 0
-print("enviando el archivo " + nombre)
-print("el hash del archivo es: " + hexadecimal)
-while l:
-    datagramas += 1
-    ser_socket.sendto(l, addr)
+
+
+def mandar_file(addr):
+    f = open("files/" + nombre, 'rb')
     l = f.read(1024)
-print("se Finalizó el envio del archivo")
-corte = nombre + "kill"
-# Se envía 4 veces la orden de terminar la recepción de archivos (ya que por UDP hay perdida de datagramas)
-ser_socket.sendto(corte.encode('utf-8'), addr)
-ser_socket.sendto(corte.encode('utf-8'), addr)
-ser_socket.sendto(corte.encode('utf-8'), addr)
-ser_socket.sendto(corte.encode('utf-8'), addr)
+    datagramas = 0
+    print("enviando el archivo " + nombre)
+    print("el hash del archivo es: " + hexadecimal)
+    while l:
+        datagramas += 1
+        ser_socket.sendto(l, addr)
+        l = f.read(1024)
+    print("se Finalizó el envio del archivo")
+    corte = nombre + "kill"
+    # Se envía 4 veces la orden de terminar la recepción de archivos (ya que por UDP hay perdida de datagramas)
+    ser_socket.sendto(corte.encode('utf-8'), addr)
+    ser_socket.sendto(corte.encode('utf-8'), addr)
+    ser_socket.sendto(corte.encode('utf-8'), addr)
+    ser_socket.sendto(corte.encode('utf-8'), addr)
+
+
+# Se recibe la información de conexión del cliente
+def esperar_conexiones():
+    esperadas = 0
+    while esperadas < conexiones:
+        try:
+            data, addr = ser_socket.recvfrom(1024)
+            #se manda el nombre
+            thread_x = threading.Thread(target=send_file_name(addr))
+            #se manda el hash
+            thread_y = threading.Thread(target=send_file_name(addr))
+            #se manda el file
+            thread_z = threading.Thread(target=mandar_file(addr))
+        except OSError as err:
+            print(err)
+
+        esperadas += 1
+
+
+esperar_conexiones()
