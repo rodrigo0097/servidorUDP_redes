@@ -1,6 +1,5 @@
 import socket
 import hashlib
-
 FILE100 = "prueba100mb.txt"
 FILE250 = "prueba250mb.txt"
 FILEPRUEBA = "prueba.txt"
@@ -34,14 +33,11 @@ def menu_inicial_tamanio():
 
 # Método que define el número de conexiones con las que se van a trabajar
 def menu_inicial_conexiones():
-    print("Presione el número segun las conexiones que desee"
-          "\n" "1. 1 conexión"
-          "\n" "2. 5 conexiones"
-          "\n" "3. 10 conexiones")
+    print("Inserte el número de conexiones deseadas (1-25): ")
     conexiones = input()
     connections = int(conexiones)
-    if connections > 3 or connections < 1:
-        print("por favor ingrese un número entre 1 y 3")
+    if connections > 25 or connections < 1:
+        print("por favor ingrese un número entre 1 y 25")
         menu_inicial_conexiones()
     return connections
 
@@ -49,6 +45,8 @@ def menu_inicial_conexiones():
 # Se crea el socket de tipo UDP
 ser_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 ser_socket.bind(('127.0.0.1', 12345))
+# Se define el número de clientes con los que se va a trabajar
+conexiones = menu_inicial_conexiones()
 # Se captura el número del archivo y su nombre en caso de ser necesario
 numero, nombre = menu_inicial_tamanio()
 

@@ -5,4 +5,4 @@ prueba.txt. Tambien puede añadir el archivo que desee, con cualquier nombre y e
 
 para empezar ejecute el archivo UDPServer.py seleccione el archivo deseado. Posteriormente
 ejecute el archivo cliente y espere a que este notifique la recepción del archivo.
-Finalmente, revise que su archivo llego adecuadamente a la carpeta recibidos
+Finalmente, revise que su archivo llego adecuadamente a la carpeta ArchivosRecibidos

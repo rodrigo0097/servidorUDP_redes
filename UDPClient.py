@@ -13,7 +13,7 @@ data,addr = cli_socket.recvfrom(1024)
 # Se captura el nombre del file desde el servidor
 file_name = data
 titulo = file_name.decode("utf-8")
-f = open("recibidos/"+titulo, 'wb')
+f = open("ArchivosRecibidos/"+titulo, 'wb')
 # recepción del hash
 data,addr = cli_socket.recvfrom(1024)
 hexadecimal_hash = data.decode()
