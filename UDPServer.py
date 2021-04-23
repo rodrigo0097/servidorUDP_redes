@@ -130,6 +130,7 @@ def esperar_conexiones():
             thread_y = threading.Thread(target=send_file_name(addr))
             #se manda el file
             thread_z = threading.Thread(target=mandar_file(addr))
+            thread_z.start()
         except OSError as err:
             print(err)
 
